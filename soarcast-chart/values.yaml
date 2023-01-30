@@ -1,0 +1,140 @@
+celery:
+
+  name: celery
+
+  labels:
+    app: celery
+
+  imagePullSecrets:
+  - name: imagepull
+
+  celeryWorker:
+   
+    image:
+      repository: 
+      tag: ""
+      pullPolicy: Always
+
+    command:
+    - celery
+    - -A
+    - mission
+    - worker
+    - --loglevel=INFO
+
+    volumeMounts:
+    - name: app-config
+      mountPath: /mnt/appconfig.json
+      subPath: appconfig.json
+
+    Resources:
+      limits:
+        cpu: "1000m"
+        memory: "500Mi"
+      requests:
+        cpu: "500m"
+        memory: "250Mi"      
+
+
+  celeryBeat:
+   
+    image:
+      repository: 
+      tag: ""
+      pullPolicy: Always
+
+    command: 
+    - celery
+    - -A
+    - divy
+    - beat
+    - --loglevel=INFO
+
+    volumeMounts:
+    - name: app-config
+      mountPath: /mnt/appconfig.json
+      subPath: appconfig.json 
+
+    Resources:
+      limits:
+        cpu: "1000m"
+        memory: "500Mi"
+      requests:
+        cpu: "500m"
+        memory: "250Mi"
+  
+  secretFiles:
+    enabled: true
+    name: app-config
+    type: generic
+    filePath: "secretfiles/dev/celery/appconfig.json" 
+
+  strategy: {}
+
+  volumes:
+  - name: app-config
+    secret:
+      secretName: app-config
+  - name: media
+    persistentVolumeClaim:
+      claimName: divy-media
+  
+  nodeSelector: {}
+    
+
+uwsgi:
+  
+  name: uwsgi
+
+  labels: 
+     app: uwsgi
+  
+  imagePullSecrets:
+  - name: imagepull
+
+  image:
+    repository: 
+    tag: ""
+    pullPolicy: Always
+   
+  workingDir: /app
+
+  containerPort: 8000 
+    
+  volumes:
+  - name: staticfiles
+    persistentVolumeClaim:
+      claimName: soarcast-staticfiles
+  - name: app-config
+    secret:
+      secretName: app-config
+ 
+  volumeMounts:
+  - name: staticfiles
+    mountPath: /app/staticfiles
+  - name: app-config
+    mountPath: /mnt/appconfig.json
+    subPath: appconfig.json
+ 
+  Resources:
+    limits:
+      cpu: "1000m"
+      memory: "500Mi"
+    requests:
+      cpu: "500m"
+      memory: "250Mi"
+
+  service:
+    name: uwsgi
+    ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      
+  strategy: {}
+  
+  secretFiles:
+    enabled: true
+    name: celery
+    type: generic
+    filePath: "secretfiles/dev/uwsgi/appconfig.json" 
