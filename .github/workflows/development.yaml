@@ -11,8 +11,8 @@
 
         env:
           AWS_REGION: us-east-2
-          CLUSTER_NAME: AccuKnox
-          NAMESPACE : accuknox-dev-soarcast
+          CLUSTER_NAME: microservices-test
+          NAMESPACE : test-soarcast
           IMAGE_REPO: 956994857092.dkr.ecr.us-east-2.amazonaws.com
           IMAGE_NAME: soarcast
           IMAGE_TAG: 1.0.${{ github.run_number }}
