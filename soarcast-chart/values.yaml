@@ -64,7 +64,7 @@ celery:
         memory: "250Mi"
   
   secretFiles:
-    enabled: true
+    enabled: false
     name: app-config
     type: generic
     filePath: "secretfiles/dev/celery/appconfig.json" 
@@ -75,9 +75,6 @@ celery:
   - name: app-config
     secret:
       secretName: app-config
-  - name: media
-    persistentVolumeClaim:
-      claimName: divy-media
   
   nodeSelector: {}
     
@@ -134,7 +131,7 @@ uwsgi:
   strategy: {}
   
   secretFiles:
-    enabled: true
+    enabled: false
     name: celery
     type: generic
     filePath: "secretfiles/dev/uwsgi/appconfig.json" 
