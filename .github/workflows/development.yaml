@@ -14,7 +14,7 @@
           CLUSTER_NAME: microservices-test
           NAMESPACE : test-soarcast
           IMAGE_REPO: 956994857092.dkr.ecr.us-east-2.amazonaws.com
-          IMAGE_NAME: soarcast
+          IMAGE_NAME: soarcast-test
           IMAGE_TAG: 1.0.${{ github.run_number }}
           CHART_NAME: soarcast-chart
 
