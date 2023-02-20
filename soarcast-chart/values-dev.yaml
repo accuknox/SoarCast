@@ -11,7 +11,7 @@ celery:
   celeryWorker:
    
     image:
-      repository: 956994857092.dkr.ecr.us-east-2.amazonaws.com/soarcast-test
+      repository: 956994857092.dkr.ecr.us-west-2.amazonaws.com/soarcast-test
       tag: ""
       pullPolicy: Always
 
@@ -39,7 +39,7 @@ celery:
   celeryBeat:
    
     image:
-      repository: 956994857092.dkr.ecr.us-east-2.amazonaws.com/soarcast-test
+      repository: 956994857092.dkr.ecr.us-west-2.amazonaws.com/soarcast-test
       tag: ""
       pullPolicy: Always
 
@@ -90,7 +90,7 @@ uwsgi:
   - name: imagepull
 
   image:
-    repository: 956994857092.dkr.ecr.us-east-2.amazonaws.com/soarcast-test
+    repository: 956994857092.dkr.ecr.us-west-2.amazonaws.com/soarcast-test
     tag: ""
     pullPolicy: Always
    
