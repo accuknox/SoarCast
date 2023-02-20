@@ -34,8 +34,8 @@
           - name: EKS connect
             run:  aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
-          #- name: Login to Docker
-          #  run: docker login -u "${{ secrets.ARTIFACTORY_USERNAME }}" -p "${{ secrets.ARTIFACTORY_PASSWORD }}" artifactory.accuknox.com 
+          - name: Login to Docker
+           run: docker login -u "${{ secrets.ARTIFACTORY_USERNAME }}" -p "${{ secrets.ARTIFACTORY_PASSWORD }}" artifactory.accuknox.com 
           
           - name: Build the Docker image
             run: docker build -f Dockerfile django-backend/. --tag ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
@@ -63,6 +63,7 @@
           - name: Push to Amazon ECR
             run: |
               docker push ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
           - name: Helm Build
             run: |
               sed -i "/^\([[:space:]]*appVersion: \).*/s//\1${{ env.IMAGE_TAG }}/" ${{ env.CHART_NAME }}/Chart.yaml
@@ -70,5 +71,6 @@
               helm lint ${{ env.CHART_NAME }} 
               helm package ${{ env.CHART_NAME }}
               pwd
+
           - name: Helm Install
             run: helm upgrade --install soarcast ${{ env.CHART_NAME }} -n ${{ env.NAMESPACE }} --values=${{ env.CHART_NAME }}/values-dev.yaml
