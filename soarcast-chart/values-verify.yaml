@@ -75,9 +75,6 @@ celery:
   - name: app-config
     secret:
       secretName: app-config
-  - name: media
-    persistentVolumeClaim:
-      claimName: divy-media
   
   nodeSelector: {}
     
