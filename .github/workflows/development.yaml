@@ -10,8 +10,8 @@
         runs-on: ubuntu-latest
 
         env:
-          AWS_REGION: us-east-2
-          CLUSTER_NAME: microservices-test
+          AWS_REGION: us-west-2
+          CLUSTER_NAME: devops-poc
           NAMESPACE : test-soarcast
           IMAGE_REPO: 956994857092.dkr.ecr.us-east-2.amazonaws.com
           IMAGE_NAME: soarcast-test

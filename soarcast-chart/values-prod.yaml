@@ -138,3 +138,58 @@ uwsgi:
     name: celery
     type: generic
     filePath: "secretfiles/prod/uwsgi/appconfig.json"
+
+
+externalServices:
+- enabled: true
+  name: redis
+  type: ExternalName
+  externalName:
+
+- enabled: true
+  name: redis-worker
+  type: ExternalName
+  externalName: 
+
+- enabled: true
+  name: postgres
+  type: ExternalName
+  externalName: 
+
+- enabled: true
+  name: postgres-worker
+  type: ExternalName
+  externalName: 
+
+- enabled: true
+  name: aurora
+  type: ExternalName
+  externalName: 
+
+
+
+  namespace: accuknox-soarcast
+
+pv:
+  name: soarcast-staticfiles
+  enabled: false
+  
+pvspec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: efs-sc
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle:  fs-021e56b41b9577efa #use same efs as divy-staticfiles pv
+
+pvcspec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: efs-sc
+  resources:
+    requests:
+      storage: 1Gi
