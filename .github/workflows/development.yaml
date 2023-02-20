@@ -13,7 +13,7 @@
           AWS_REGION: us-west-2
           CLUSTER_NAME: devops-poc
           NAMESPACE : test-soarcast
-          IMAGE_REPO: 956994857092.dkr.ecr.us-east-2.amazonaws.com
+          IMAGE_REPO: 956994857092.dkr.ecr.us-west-2.amazonaws.com
           IMAGE_NAME: soarcast-test
           IMAGE_TAG: 1.0.${{ github.run_number }}
           CHART_NAME: soarcast-chart
@@ -34,8 +34,8 @@
           - name: EKS connect
             run:  aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
-          - name: Login to Docker
-            run: docker login -u "${{ secrets.ARTIFACTORY_USERNAME }}" -p "${{ secrets.ARTIFACTORY_PASSWORD }}" artifactory.accuknox.com 
+          #- name: Login to Docker
+          #  run: docker login -u "${{ secrets.ARTIFACTORY_USERNAME }}" -p "${{ secrets.ARTIFACTORY_PASSWORD }}" artifactory.accuknox.com 
           
           - name: Build the Docker image
             run: docker build -f Dockerfile django-backend/. --tag ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
