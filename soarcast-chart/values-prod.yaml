@@ -169,7 +169,7 @@ externalServices:
 
 pv:
   name: soarcast-staticfiles
-  enabled: true
+  enabled: false
   
 pvspec:
   capacity:
