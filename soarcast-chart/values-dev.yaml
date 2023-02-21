@@ -169,7 +169,7 @@ namespace: accuknox-soarcast
 #pv and pvc enable
 pv:
   name: soarcast-staticfiles
-  enabled: false
+  enabled: true
   
 pvspec:
   capacity:
