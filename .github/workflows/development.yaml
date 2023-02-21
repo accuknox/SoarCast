@@ -25,12 +25,12 @@
             run: echo "${{ secrets.GIT_KEY }}" > GIT-KEY
 
           - name: create-json
-              id: create-json
-              uses: jsdaniell/create-json@v1.2.2
-              with:
-                name: "credentials.json"
-                json: ${{ secrets.DEV_ENV_JSON }}
-                dir: 'soarcast-chart/secretfiles/dev/celery/appconfig.json'
+            id: create-json
+            uses: jsdaniell/create-json@v1.2.2
+            with:
+              name: "credentials.json"
+              json: ${{ secrets.DEV_ENV_JSON }}
+              dir: 'soarcast-chart/secretfiles/dev/celery/appconfig.json'
 
           
           # - name: Set env file
