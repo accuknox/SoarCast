@@ -28,9 +28,9 @@
             id: create-json
             uses: jsdaniell/create-json@v1.2.2
             with:
-              name: "credentials.json"
+              name: "appconfig.json"
               json: ${{ secrets.DEV_ENV_JSON }}
-              dir: 'soarcast-chart/secretfiles/dev/celery/appconfig.json'
+              dir: 'soarcast-chart/secretfiles/dev/celery/'
 
           
           # - name: Set env file
