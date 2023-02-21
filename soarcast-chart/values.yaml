@@ -164,7 +164,7 @@ externalServices:
   externalName: 
 
 
-namespace: accuknox-soarcast
+namespace: test-soarcast
 
 #pv and pvc enable
 pv:
