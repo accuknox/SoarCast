@@ -25,10 +25,10 @@
             run: echo "${{ secrets.GIT_KEY }}" > GIT-KEY
 
           - name: Set env file
-            run: 'echo "${{ secrets.DEV_ENV_JSON }}" > soarcast-chart/secretfiles/dev/celery/appconfig.json' 
+            run: echo "${{ secrets.DEV_ENV_JSON }}" > soarcast-chart/secretfiles/dev/celery/appconfig.json
 
           - name: Set env file
-            run: 'echo "${{ secrets.DEV_ENV_JSON }}" > soarcast-chart/secretfiles/dev/uwsgi/appconfig.json'
+            run: echo "${{ secrets.DEV_ENV_JSON }}" > soarcast-chart/secretfiles/dev/uwsgi/appconfig.json
 
           - name: AWS Credentials
             uses: aws-actions/configure-aws-credentials@v1
