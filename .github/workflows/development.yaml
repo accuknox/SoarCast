@@ -31,6 +31,12 @@
               name: "appconfig.json"
               json: ${{ secrets.DEV_ENV_JSON }}
               dir: 'soarcast-chart/secretfiles/dev/celery/'
+          - name: create-json
+            id: create-json-1
+            uses: jsdaniell/create-json@v1.2.2
+            with:
+              name: "appconfig.json"
+              json: ${{ secrets.DEV_ENV_JSON }}
               dir: 'soarcast-chart/secretfiles/dev/uwsgi/'
 
           
