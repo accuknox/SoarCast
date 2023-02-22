@@ -31,6 +31,7 @@
               name: "appconfig.json"
               json: ${{ secrets.DEV_ENV_JSON }}
               dir: 'soarcast-chart/secretfiles/dev/celery/'
+              dir: 'soarcast-chart/secretfiles/dev/uwsgi/'
 
           
           # - name: Set env file

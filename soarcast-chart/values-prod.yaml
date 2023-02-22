@@ -181,7 +181,7 @@ pvspec:
   storageClassName: efs-sc
   csi:
     driver: efs.csi.aws.com
-    volumeHandle:  fs-021e56b41b9577efa #use same efs as divy-staticfiles pv
+    volumeHandle: fs-021e56b41b9577efa #use same efs as divy-staticfiles pv
 
 pvcspec:
   accessModes:
