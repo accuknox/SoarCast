@@ -132,7 +132,7 @@ uwsgi:
   
   secretFiles:
     enabled: true
-    name: celery
+    name: app-config
     type: generic
     filePath: "secretfiles/dev/uwsgi/appconfig.json"
 
