@@ -102,7 +102,7 @@ uwsgi:
   - name: staticfiles
     persistentVolumeClaim:
       claimName: soarcast-staticfiles
-  - name: appconnfig
+  - name: appconfig
     secret:
       secretName: appconfig
  
