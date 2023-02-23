@@ -102,9 +102,9 @@ uwsgi:
   - name: staticfiles
     persistentVolumeClaim:
       claimName: soarcast-staticfiles
-  - name: app-config
+  - name: appconnfig
     secret:
-      secretName: celery
+      secretName: appconfig
  
   volumeMounts:
   - name: staticfiles
@@ -132,7 +132,7 @@ uwsgi:
   
   secretFiles:
     enabled: true
-    name: celery
+    name: appconfig
     type: generic
     filePath: "secretfiles/dev/uwsgi/appconfig.json"
 
