@@ -109,7 +109,7 @@ uwsgi:
   volumeMounts:
   - name: staticfiles
     mountPath: /app/staticfiles
-  - name: app-config
+  - name: appconfig
     mountPath: /mnt/appconfig.json
     subPath: appconfig.json
  

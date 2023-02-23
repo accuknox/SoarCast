@@ -102,14 +102,14 @@ uwsgi:
   - name: staticfiles
     persistentVolumeClaim:
       claimName: soarcast-staticfiles
-  - name: app-config
+  - name: appconfig
     secret:
-      secretName: app-config
+      secretName: appconfig
  
   volumeMounts:
   - name: staticfiles
     mountPath: /app/staticfiles
-  - name: app-config
+  - name: appconfig
     mountPath: /mnt/appconfig.json
     subPath: appconfig.json
  
@@ -132,7 +132,7 @@ uwsgi:
   
   secretFiles:
     enabled: true
-    name: app-config
+    name: appconfig
     type: generic
     filePath: "secretfiles/verify/uwsgi/appconfig.json"
 
