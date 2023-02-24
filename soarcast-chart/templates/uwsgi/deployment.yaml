@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.uwsgi.name }}
+spec:
+  selector:
+    matchLabels:
+      {{- toYaml .Values.uwsgi.labels | nindent 6 }}
+  strategy:
+    {{- toYaml .Values.uwsgi.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- toYaml .Values.uwsgi.labels | nindent 8 }}
+    spec:
+      imagePullSecrets:
+      {{- toYaml .Values.uwsgi.imagePullSecrets | nindent 6 }}
+      nodeSelector: 
+        {{- toYaml .Values.uwsgi.nodeSelector | nindent 8 }} 
+      containers:    
+      - volumeMounts:
+        {{- toYaml .Values.uwsgi.volumeMounts | nindent 8 }}
+        image: "{{ .Values.uwsgi.image.repository }}:{{ .Values.uwsgi.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.uwsgi.image.pullPolicy }}
+        name: web
+        workingDir: {{ .Values.uwsgi.workingDir }}
+        ports:
+        - containerPort: {{ .Values.uwsgi.containerPort }}
+        resources:
+            {{- toYaml .Values.uwsgi.Resources | nindent 10 }}
+      volumes:
+      {{- toYaml .Values.uwsgi.volumes | nindent 8 }}

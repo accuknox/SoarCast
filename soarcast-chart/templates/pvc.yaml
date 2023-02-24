@@ -1,0 +1,9 @@
+{{- if .Values.pv.enabled -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.pv.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+{{ toYaml .Values.pvcspec | nindent 2 }}
+{{- end }} 

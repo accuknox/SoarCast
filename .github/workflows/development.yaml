@@ -1,0 +1,91 @@
+    on:
+      push:
+        branches:         
+        - 'development' 
+
+    name: Dev pipeline for soarcast application
+
+    jobs:
+      deploy:
+        runs-on: ubuntu-latest
+
+        env:
+          AWS_REGION: us-east-2
+          CLUSTER_NAME: AccuKnox
+          NAMESPACE : accuknox-dev-soarcast
+          IMAGE_REPO: 956994857092.dkr.ecr.us-east-2.amazonaws.com
+          IMAGE_NAME: soarcast
+          IMAGE_TAG: 1.0.${{ github.run_number }}
+          CHART_NAME: soarcast-chart
+
+        steps:
+          - uses: actions/checkout@v2
+
+          - name: Set git ssh private key
+            run: echo "${{ secrets.GIT_KEY }}" > GIT-KEY
+
+          - name: create-json
+            id: create-json
+            uses: jsdaniell/create-json@v1.2.2
+            with:
+              name: "appconfig.json"
+              json: ${{ secrets.DEV_ENV_JSON }}
+              dir: 'soarcast-chart/secretfiles/dev/'
+
+          
+          # - name: Set env file
+          #   run: echo "${{ secrets.DEV_ENV_JSON }}" > soarcast-chart/secretfiles/dev/celery/appconfig.json
+
+          # - name: Set env file
+          #   run: echo "${{ secrets.DEV_ENV_JSON }}" > soarcast-chart/secretfiles/dev/uwsgi/appconfig.json
+
+          - name: AWS Credentials
+            uses: aws-actions/configure-aws-credentials@v1
+            with:
+              aws-region: ${{ env.AWS_REGION }}
+              aws-access-key-id: ${{ secrets.AWS_DEV_ACCESS_ID }}
+              aws-secret-access-key: ${{ secrets.AWS_DEV_SECRET_ID }}
+              
+          - name: EKS connect
+            run:  aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
+
+          #- name: Login to Docker
+          #  run: docker login -u "${{ secrets.ARTIFACTORY_USERNAME }}" -p "${{ secrets.ARTIFACTORY_PASSWORD }}" artifactory.accuknox.com 
+          
+          - name: Build the Docker image
+            run: docker build -f Dockerfile django-backend/. --tag ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          - name: Run Trivy vulnerability scanner
+            uses: aquasecurity/trivy-action@master
+            with:
+              image-ref: ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+              output: ./trivy-results
+              severity: HIGH,CRITICAL
+              exit-code: 0
+
+          - name: Publish report to S3 
+            uses: prewk/s3-cp-action@v2  
+            with:
+              aws_access_key_id: ${{ secrets.AWS_DEV_ACCESS_ID }}
+              aws_secret_access_key: ${{ secrets.AWS_DEV_SECRET_ID }}
+              source: ./trivy-results
+              dest: s3://accuknox-dev-trivy-reports/${{ env.IMAGE_NAME }}/trivy-results-${{ env.IMAGE_TAG }}
+
+          - name: Login to Amazon ECR
+            id: login-ecr
+            uses: aws-actions/amazon-ecr-login@v1
+
+          - name: Push to Amazon ECR
+            run: |
+              docker push ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+          - name: Helm Build
+            run: |
+              sed -i "/^\([[:space:]]*appVersion: \).*/s//\1${{ env.IMAGE_TAG }}/" ${{ env.CHART_NAME }}/Chart.yaml
+              cat ${{ env.CHART_NAME }}/Chart.yaml
+              helm lint ${{ env.CHART_NAME }} 
+              helm package ${{ env.CHART_NAME }}
+              pwd
+
+          - name: Helm Install
+            run: helm upgrade --install soarcast ${{ env.CHART_NAME }} -n ${{ env.NAMESPACE }} --values=${{ env.CHART_NAME }}/values-dev.yaml

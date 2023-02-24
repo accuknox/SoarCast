@@ -1,0 +1,200 @@
+celery:
+
+  name: celery
+
+  labels:
+    app: celery
+
+  imagePullSecrets:
+  - name: imagepull
+
+  celeryWorker:
+   
+    image:
+      repository: 956994857092.dkr.ecr.us-east-2.amazonaws.com/soarcast
+      tag: ""
+      pullPolicy: Always
+
+    command:
+    - celery
+    - -A
+    - mission
+    - worker
+    - --loglevel=INFO
+
+    volumeMounts:
+    - name: appconfig
+      mountPath: /mnt/appconfig.json
+      subPath: appconfig.json
+
+    Resources:
+      limits:
+        cpu: "1000m"
+        memory: "500Mi"
+      requests:
+        cpu: "500m"
+        memory: "250Mi"      
+
+
+  celeryBeat:
+   
+    image:
+      repository: 956994857092.dkr.ecr.us-east-2.amazonaws.com/soarcast
+      tag: ""
+      pullPolicy: Always
+
+    command: 
+    - celery
+    - -A
+    - mission
+    - beat
+    - --loglevel=INFO
+
+    volumeMounts:
+    - name: appconfig
+      mountPath: /mnt/appconfig.json
+      subPath: appconfig.json 
+
+    Resources:
+      limits:
+        cpu: "1000m"
+        memory: "500Mi"
+      requests:
+        cpu: "500m"
+        memory: "250Mi"
+
+  secretFiles:
+    enabled: false
+    name: appconfig
+    type: generic
+    filePath: "secretfiles/dev/celery/appconfig.json" 
+
+  strategy: {}
+
+  volumes:
+  - name: appconfig
+    secret:
+      secretName: appconfig
+  
+  nodeSelector: {}
+    
+
+uwsgi:
+  
+  name: uwsgi
+
+  labels: 
+     app: uwsgi
+  
+  imagePullSecrets:
+  - name: imagepull
+
+  image:
+    repository: 956994857092.dkr.ecr.us-east-2.amazonaws.com/soarcast
+    tag: ""
+    pullPolicy: Always
+   
+  workingDir: /app
+
+  containerPort: 8000 
+    
+  volumes:
+  - name: staticfiles
+    persistentVolumeClaim:
+      claimName: soarcast-staticfiles
+  - name: appconfig
+    secret:
+      secretName: appconfig
+ 
+  volumeMounts:
+  - name: staticfiles
+    mountPath: /app/staticfiles
+  - name: appconfig
+    mountPath: /mnt/appconfig.json
+    subPath: appconfig.json
+ 
+  Resources:
+    limits:
+      cpu: "1000m"
+      memory: "500Mi"
+    requests:
+      cpu: "500m"
+      memory: "250Mi"
+
+  service:
+    name: uwsgi
+    ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      
+  strategy: {}
+  
+  secretFiles:
+    enabled: false
+    name: appconfig
+    type: generic
+    filePath: "secretfiles/dev/uwsgi/appconfig.json"
+
+
+externalServices:
+- enabled: true
+  name: redis
+  type: ExternalName
+  externalName: master.soarcast-elasticache.ocgv53.use2.cache.amazonaws.com
+
+- enabled: true
+  name: redis-worker
+  type: ExternalName
+  externalName: master.soarcast-elasticache.ocgv53.use2.cache.amazonaws.com
+
+- enabled: true
+  name: postgres
+  type: ExternalName
+  externalName: divy.cluster-c29nmrml3fh6.us-east-2.rds.amazonaws.com
+
+- enabled: true
+  name: postgres-worker
+  type: ExternalName
+  externalName: divy.cluster-c29nmrml3fh6.us-east-2.rds.amazonaws.com
+
+# - enabled: true
+#   name: aurora
+#   type: ExternalName
+#   externalName: 
+
+
+namespace: accuknox-dev-soarcast
+
+#pv and pvc enable
+pv:
+  name: soarcast-staticfiles
+  enabled: true
+  
+pvspec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: efs-sc
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-078f693ed1331bb2c #use same efs as divy-staticfiles pv
+
+pvcspec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: efs-sc
+  resources:
+    requests:
+      storage: 1Gi
+
+
+secretFiles:
+  enabled: true
+  name: appconfig
+  type: generic
+  filePath: "secretfiles/dev/appconfig.json"
+

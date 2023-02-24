@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.celery.name }}
+spec:
+  selector:
+    matchLabels:
+      {{- toYaml .Values.celery.labels | nindent 6 }}
+  strategy:
+    {{- toYaml .Values.celery.strategy | nindent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- toYaml .Values.celery.labels | nindent 8 }}
+    spec:
+      imagePullSecrets:
+      {{- toYaml .Values.celery.imagePullSecrets | nindent 6 }}
+      nodeSelector: 
+        {{ toYaml .Values.celery.nodeSelector | nindent 8 }}  
+      containers:
+      - image: "{{ .Values.celery.celeryWorker.image.repository }}:{{ .Values.celery.celeryWorker.image.tag | default .Chart.AppVersion }}"
+        name: celery-worker
+        imagePullPolicy: {{ .Values.celery.celeryWorker.image.pullPolicy }}
+        command:
+        {{- toYaml .Values.celery.celeryWorker.command | nindent 8 }}
+        volumeMounts:
+        {{- toYaml .Values.celery.celeryWorker.volumeMounts | nindent 8 }}
+      - image: "{{ .Values.celery.celeryBeat.image.repository }}:{{ .Values.celery.celeryBeat.image.tag | default .Chart.AppVersion }}"
+        name: celery-beat
+        imagePullPolicy: {{ .Values.celery.celeryBeat.image.pullPolicy }}
+        command: 
+        {{- toYaml .Values.celery.celeryBeat.command | nindent 8 }}
+        volumeMounts:
+        {{- toYaml .Values.celery.celeryBeat.volumeMounts | nindent 8 }}      
+      volumes:
+      {{- toYaml .Values.celery.volumes | nindent 6 }}
