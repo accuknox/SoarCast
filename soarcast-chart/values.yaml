@@ -23,7 +23,7 @@ celery:
     - --loglevel=INFO
 
     volumeMounts:
-    - name: app-config
+    - name: appconfig
       mountPath: /mnt/appconfig.json
       subPath: appconfig.json
 
@@ -51,7 +51,7 @@ celery:
     - --loglevel=INFO
 
     volumeMounts:
-    - name: app-config
+    - name: appconfig
       mountPath: /mnt/appconfig.json
       subPath: appconfig.json 
 
@@ -65,16 +65,16 @@ celery:
   
   secretFiles:
     enabled: false
-    name: app-config
+    name: appconfig
     type: generic
     filePath: "secretfiles/dev/celery/appconfig.json" 
 
   strategy: {}
 
   volumes:
-  - name: app-config
+  - name: appconfig
     secret:
-      secretName: app-config
+      secretName: appconfig
   
   nodeSelector: {}
     
