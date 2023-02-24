@@ -1,7 +1,7 @@
     on:
       push:
         branches:         
-        - 'dev-helm-chart' 
+        - 'development' 
 
     name: Dev pipeline for soarcast application
 
@@ -10,11 +10,11 @@
         runs-on: ubuntu-latest
 
         env:
-          AWS_REGION: us-west-2
-          CLUSTER_NAME: devops-poc
+          AWS_REGION: us-east-2
+          CLUSTER_NAME: AccuKnox
           NAMESPACE : test-soarcast
-          IMAGE_REPO: 956994857092.dkr.ecr.us-west-2.amazonaws.com
-          IMAGE_NAME: soarcast-test
+          IMAGE_REPO: 956994857092.dkr.ecr.us-east-2.amazonaws.com
+          IMAGE_NAME: soarcast
           IMAGE_TAG: 1.0.${{ github.run_number }}
           CHART_NAME: soarcast-chart
 
