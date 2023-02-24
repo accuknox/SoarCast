@@ -165,7 +165,7 @@ externalServices:
 
 
 
-  namespace: accuknox-soarcast
+namespace: accuknox-dev-soarcast
 
 pv:
   name: soarcast-staticfiles
