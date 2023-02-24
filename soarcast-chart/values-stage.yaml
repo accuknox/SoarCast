@@ -46,7 +46,7 @@ celery:
     command: 
     - celery
     - -A
-    - divy
+    - mission
     - beat
     - --loglevel=INFO
 
@@ -64,7 +64,7 @@ celery:
         memory: "250Mi"
   
   secretFiles:
-    enabled: true
+    enabled: false
     name: app-config
     type: generic
     filePath: "secretfiles/verify/celery/appconfig.json" 
@@ -131,7 +131,7 @@ uwsgi:
   strategy: {}
   
   secretFiles:
-    enabled: true
+    enabled: false
     name: appconfig
     type: generic
     filePath: "secretfiles/verify/uwsgi/appconfig.json"
@@ -191,3 +191,8 @@ pvcspec:
     requests:
       storage: 1Gi
 
+secretFiles:
+  enabled: true
+  name: app-config
+  type: generic
+  filePath: "secretfiles/stage/appconfig.json"

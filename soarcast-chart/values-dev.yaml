@@ -46,7 +46,7 @@ celery:
     command: 
     - celery
     - -A
-    - divy
+    - mission
     - beat
     - --loglevel=INFO
 
@@ -62,9 +62,9 @@ celery:
       requests:
         cpu: "500m"
         memory: "250Mi"
-  
+
   secretFiles:
-    enabled: true
+    enabled: false
     name: app-config
     type: generic
     filePath: "secretfiles/dev/celery/appconfig.json" 
@@ -102,14 +102,14 @@ uwsgi:
   - name: staticfiles
     persistentVolumeClaim:
       claimName: soarcast-staticfiles
-  - name: appconfig
+  - name: app-config
     secret:
-      secretName: appconfig
+      secretName: app-config
  
   volumeMounts:
   - name: staticfiles
     mountPath: /app/staticfiles
-  - name: appconfig
+  - name: app-config
     mountPath: /mnt/appconfig.json
     subPath: appconfig.json
  
@@ -131,7 +131,7 @@ uwsgi:
   strategy: {}
   
   secretFiles:
-    enabled: true
+    enabled: false
     name: appconfig
     type: generic
     filePath: "secretfiles/dev/uwsgi/appconfig.json"
@@ -190,3 +190,11 @@ pvcspec:
   resources:
     requests:
       storage: 1Gi
+
+
+secretFiles:
+  enabled: true
+  name: appconfig
+  type: generic
+  filePath: "secretfiles/dev/appconfig.json"
+
