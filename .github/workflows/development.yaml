@@ -46,9 +46,7 @@
           - name: EKS connect
             run:  aws eks update-kubeconfig --name ${{ env.CLUSTER_NAME }} --region ${{ env.AWS_REGION }}
 
-          #- name: Login to Docker
-          #  run: docker login -u "${{ secrets.ARTIFACTORY_USERNAME }}" -p "${{ secrets.ARTIFACTORY_PASSWORD }}" artifactory.accuknox.com 
-          
+     
           - name: Build the Docker image
             run: docker build -f Dockerfile django-backend/. --tag ${{ env.IMAGE_REPO }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
 
