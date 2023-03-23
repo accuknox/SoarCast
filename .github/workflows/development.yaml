@@ -21,8 +21,6 @@
         steps:
           - uses: actions/checkout@v2
 
-          - name: Set git ssh private key
-            run: echo "${{ secrets.GIT_KEY }}" > GIT-KEY
 
           - name: create-json
             id: create-json
