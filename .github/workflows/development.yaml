@@ -11,7 +11,7 @@
 
         env:
           AWS_REGION: us-east-2
-          CLUSTER_NAME: AccuKnox
+          CLUSTER_NAME: AccuKnox-dev
           NAMESPACE : accuknox-dev-soarcast
           IMAGE_REPO: 956994857092.dkr.ecr.us-east-2.amazonaws.com
           IMAGE_NAME: soarcast
@@ -21,15 +21,12 @@
         steps:
           - uses: actions/checkout@v2
 
-          - name: Set git ssh private key
-            run: echo "${{ secrets.GIT_KEY }}" > GIT-KEY
-
           - name: create-json
             id: create-json
             uses: jsdaniell/create-json@v1.2.2
             with:
               name: "appconfig.json"
-              json: ${{ secrets.DEV_ENV_JSON }}
+              json: ${{ secrets.NEW_DEV_ENV_JSON }}
               dir: 'soarcast-chart/secretfiles/dev/'
 
           
